@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>字幕图片生成工具</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- 第一页：选择页面 -->
+    <div id="page1" class="page selection-page">
+        <div class="bg-decoration">
+            <div class="circle circle-1"></div>
+            <div class="circle circle-2"></div>
+            <div class="circle circle-3"></div>
+            <div class="line line-1"></div>
+            <div class="line line-2"></div>
+            <div class="line line-3"></div>
+        </div>
+        
+        <div class="selection-container">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                    </svg>
+                </div>
+                <h1>字幕图片生成工具</h1>
+                <p class="subtitle">专业级图片字幕处理解决方案</p>
+            </div>
+            
+            <div class="divider">
+                <span>选择您的设备类型</span>
+            </div>
+            
+            <div class="device-options">
+                <div class="device-option" data-device="pc" onclick="selectDevice('pc')">
+                    <div class="device-card">
+                        <div class="device-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/>
+                            </svg>
+                        </div>
+                        <div class="device-info">
+                            <span class="device-name">PC端</span>
+                            <span class="device-desc">桌面电脑 / 笔记本</span>
+                        </div>
+                    </div>
+                    <div class="check-mark">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="device-option" data-device="mobile" onclick="selectDevice('mobile')">
+                    <div class="device-card">
+                        <div class="device-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/>
+                            </svg>
+                        </div>
+                        <div class="device-info">
+                            <span class="device-name">手机端</span>
+                            <span class="device-desc">智能手机 / 平板</span>
+                        </div>
+                    </div>
+                    <div class="check-mark">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <button id="nextBtn" class="next-button" onclick="goToNextPage()" disabled>
+                <span>开始使用</span>
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+    
+    <!-- 第二页：工具页面 -->
+    <div id="page2" class="page tool-page" style="display: none;">
+        <div class="container">
+            <div class="header">
+                <h1>字幕图片生成工具</h1>
+                <button class="back-button" onclick="goBack()">← 返回选择</button>
+            </div>
+            
+            <div class="main-content" id="mainContent">
+                <!-- 控制面板 (PC端在右侧，手机端在上方) -->
+                <div class="control-panel" id="controlPanel">
+                    <!-- 图片上传区域 -->
+                    <div class="upload-section">
+                        <h2>上传图片</h2>
+                        <div class="upload-area" id="uploadArea">
+                            <input type="file" id="fileInput" accept="image/*">
+                            <p>拖拽图片到此处或点击选择</p>
+                        </div>
+                        <div class="preview-container" id="imagePreview">
+                            <img src="" alt="预览图片" id="previewImg">
+                        </div>
+                    </div>
+                    
+                    <!-- 文字编辑区域 -->
+                    <div class="text-section">
+                        <h2>文字内容</h2>
+                        <textarea id="textInput" placeholder="输入要添加的文字..."></textarea>
+                    </div>
+                    
+                    <!-- 字幕背景设置 -->
+                    <div class="background-section">
+                        <h2>字幕背景</h2>
+                        <div class="style-control">
+                            <label>背景模式：</label>
+                            <div class="bg-mode-options">
+                                <button class="bg-mode-btn active" data-mode="image">原图截取</button>
+                                <button class="bg-mode-btn" data-mode="solid">纯色背景</button>
+                            </div>
+                        </div>
+                        <div class="style-control" id="bgOpacityControl">
+                            <label for="bgOpacity">背景透明度：</label>
+                            <input type="range" id="bgOpacity" min="0" max="100" value="50">
+                            <span id="bgOpacityValue">50%</span>
+                        </div>
+                        <div class="style-control" id="bgColorControl" style="display: none;">
+                            <label for="bgColor">背景颜色：</label>
+                            <input type="color" id="bgColor" value="#000000">
+                        </div>
+                        <div class="style-control">
+                            <label for="bgGap">背景条间距：</label>
+                            <input type="range" id="bgGap" min="0" max="5" value="0" step="1">
+                            <span id="bgGapValue">0px</span>
+                        </div>
+                        <div class="style-control" id="bgGapColorControl">
+                            <label for="bgGapColor">间距颜色：</label>
+                            <input type="color" id="bgGapColor" value="#000000">
+                        </div>
+                        <div class="style-control" id="bgGapOpacityControl">
+                            <label for="bgGapOpacity">间距透明度：</label>
+                            <input type="range" id="bgGapOpacity" min="0" max="100" value="100">
+                            <span id="bgGapOpacityValue">100%</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 样式调整面板 -->
+                    <div class="style-section">
+                        <h2>样式调整</h2>
+                        <div class="style-control">
+                            <label for="textColor">文字颜色：</label>
+                            <input type="color" id="textColor" value="#ffffff">
+                        </div>
+                        <div class="style-control">
+                            <label for="textOpacity">文字透明度：</label>
+                            <input type="range" id="textOpacity" min="0" max="100" value="100">
+                            <span id="textOpacityValue">100%</span>
+                        </div>
+                        <div class="style-control">
+                            <label for="textSize">文字大小：</label>
+                            <input type="range" id="textSize" min="12" max="80" value="24">
+                            <span id="textSizeValue">24px</span>
+                        </div>
+                        <div class="style-control">
+                            <label for="fontFamily">字体：</label>
+                            <select id="fontFamily">
+                                <optgroup label="中文字体">
+                                    <option value="Microsoft YaHei">微软雅黑</option>
+                                    <option value="SimSun">宋体</option>
+                                    <option value="SimHei">黑体</option>
+                                    <option value="KaiTi">楷体</option>
+                                    <option value="FangSong">仿宋</option>
+                                    <option value="STXingkai">行楷</option>
+                                </optgroup>
+                                <optgroup label="英文字体">
+                                    <option value="Arial">Arial</option>
+                                    <option value="Times New Roman">Times New Roman</option>
+                                    <option value="Georgia">Georgia</option>
+                                    <option value="Verdana">Verdana</option>
+                                    <option value="Courier New">Courier New</option>
+                                    <option value="Impact">Impact</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div class="style-control">
+                            <label for="strokeWidth">描边宽度：</label>
+                            <input type="range" id="strokeWidth" min="0" max="30" value="0" step="0.5">
+                            <span id="strokeWidthValue">0px</span>
+                        </div>
+                        <div class="style-control">
+                            <label for="strokeColor">描边颜色：</label>
+                            <input type="color" id="strokeColor" value="#000000">
+                        </div>
+                        <div class="style-control">
+                            <label>对齐方式：</label>
+                            <div class="alignment-options">
+                                <button class="align-btn" data-align="left">左对齐</button>
+                                <button class="align-btn active" data-align="center">居中</button>
+                                <button class="align-btn" data-align="right">右对齐</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 水印设置 -->
+                    <div class="watermark-section">
+                        <h2>水印设置</h2>
+                        <div class="style-control">
+                            <label for="watermarkText">水印内容：</label>
+                            <input type="text" id="watermarkText" value="南瓜博士" placeholder="输入水印内容">
+                        </div>
+                        <div class="style-control">
+                            <label for="watermarkFont">水印字体：</label>
+                            <select id="watermarkFont">
+                                <optgroup label="中文字体">
+                                    <option value="Microsoft YaHei">微软雅黑</option>
+                                    <option value="SimSun">宋体</option>
+                                    <option value="SimHei">黑体</option>
+                                    <option value="KaiTi">楷体</option>
+                                    <option value="FangSong">仿宋</option>
+                                    <option value="STXingkai">行楷</option>
+                                </optgroup>
+                                <optgroup label="英文字体">
+                                    <option value="Arial">Arial</option>
+                                    <option value="Times New Roman">Times New Roman</option>
+                                    <option value="Georgia">Georgia</option>
+                                    <option value="Verdana">Verdana</option>
+                                    <option value="Courier New">Courier New</option>
+                                    <option value="Impact">Impact</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div class="style-control">
+                            <label>水印位置：</label>
+                            <div class="position-options">
+                                <button class="position-btn" data-position="top-left">左上角</button>
+                                <button class="position-btn active" data-position="top-right">右上角</button>
+                                <button class="position-btn" data-position="bottom-left">左下角</button>
+                                <button class="position-btn" data-position="bottom-right">右下角</button>
+                            </div>
+                        </div>
+                        <div class="style-control">
+                            <label for="watermarkColor">水印颜色：</label>
+                            <input type="color" id="watermarkColor" value="#ffffff">
+                        </div>
+                        <div class="style-control">
+                            <label for="watermarkSize">水印大小：</label>
+                            <input type="range" id="watermarkSize" min="8" max="80" value="12">
+                            <span id="watermarkSizeValue">12px</span>
+                        </div>
+                        <div class="style-control">
+                            <label for="watermarkOpacity">水印透明度：</label>
+                            <input type="range" id="watermarkOpacity" min="0" max="100" value="50">
+                            <span id="watermarkOpacityValue">50%</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 操作按钮 -->
+                    <div class="action-buttons">
+                        <button id="generateBtn">生成图片</button>
+                        <button id="downloadBtn">下载图片</button>
+                    </div>
+                </div>
+                
+                <!-- 预览面板 (PC端在左侧，手机端在下方) -->
+                <div class="preview-panel" id="previewPanel">
+                    <h2>预览效果</h2>
+                    <div class="preview-section">
+                        <canvas id="previewCanvas"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 底部信息栏 -->
+            <footer>
+                <p>© 2024 字幕图片生成工具 | 南瓜博士</p>
+            </footer>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
